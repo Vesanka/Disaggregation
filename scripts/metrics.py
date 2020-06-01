@@ -5,10 +5,9 @@ from inspect import getmembers, isfunction
 from scripts import vectorization as v
 import sys
 
-def get_values(x, x_true, save = False):
+def get_values(x, x_true, save = False, shape = None):
     """
     Получение значения всех метрик для таблицы x на основании таблицы x_true
-
     Parameters
     ----------
     x_true: np.ndarray
@@ -27,7 +26,7 @@ def get_values(x, x_true, save = False):
     for metric in getmembers(sys.modules[__name__], isfunction):
         if (metric[0] not in spec_functions):
             metric_name = metric[0].upper()
-            res = metric[1](x, x_true)
+            res = metric[1](x, x_true, shape)
             if save:
                 results[metric_name] = np.round(res,4)
             else:
@@ -37,17 +36,15 @@ def get_values(x, x_true, save = False):
     
 
     
-def mape(x, x_true):
+def mape(x, x_true, shape = None):
     """
     Получение значения метрики MAPE для таблицы x на основании таблицы x_true
-
     Parameters
     ----------
     x_true: np.ndarray
         векторизованная базовая матрица
     x: np.ndarray
         векторизованная матрица для сравнения ограничений
-
     Returns
     -------
     a: float
@@ -69,17 +66,15 @@ def mape(x, x_true):
         logging.error(traceback.format_exc())
         return -1
 
-def wape(x, x_true):
+def wape(x, x_true, shape = None):
     """
     Получение значения метрики WAPE для таблицы x на основании таблицы x_true
-
     Parameters
     ----------
     x_true: np.ndarray
         векторизованная базовая матрица
     x: np.ndarray
         векторизованная матрица для сравнения ограничений
-
     Returns
     -------
     a: float
@@ -88,9 +83,9 @@ def wape(x, x_true):
     try:
         # Проверяем число измерений
         if x.ndim == 1 or x.shape[1] == 1:
-            x = v.tomatrix(x)
+            x = v.tomatrix(x, shape)
         if x_true.ndim == 1 or x_true.shape[1] == 1:
-            x_true = v.tomatrix(x_true)    
+            x_true = v.tomatrix(x_true, shape)    
 
         diff = abs(x - x_true)
         s = x_true.sum()
@@ -104,14 +99,12 @@ def N0(x, x_true, eps = 1e-9):
     """
     Получение значения метрики N0 для таблицы x на основании таблицы x_true -
     число элементов матрицы, которые нулевые в одной матрице и ненулевые в другой
-
     Parameters
     ----------
     x_true: np.ndarray
         векторизованная базовая матрица
     x: np.ndarray
         векторизованная матрица для сравнения ограничений
-
     Returns
     -------
     a: float
@@ -131,17 +124,15 @@ def N0(x, x_true, eps = 1e-9):
         logging.error(traceback.format_exc())
         return -1
 
-def swad(x, x_true):
+def swad(x, x_true, shape = None):
     """
     Получение значения метрики SWAD для таблицы x на основании таблицы x_true
-
     Parameters
     ----------
     x_true: np.ndarray
         векторизованная базовая матрица
     x: np.ndarray
         векторизованная матрица для сравнения ограничений
-
     Returns
     -------
     a: float
@@ -150,26 +141,24 @@ def swad(x, x_true):
     try:
         # Проверяем число измерений
         if x.ndim == 1 or x.shape[1] == 1:
-            x = v.tomatrix(x)
+            x = v.tomatrix(x,  shape)
         if x_true.ndim == 1 or x_true.shape[1] == 1:
-            x_true = v.tomatrix(x_true)    
+            x_true = v.tomatrix(x_true, shape)    
             
         return np.sum(abs(x_true) * abs(x - x_true)) / np.sum(x_true ** 2)
     except Exception as e:
         logging.error(traceback.format_exc())
         return -1
     
-def PsiStat(x, x_true):
+def PsiStat(x, x_true, shape = None):
     """
     Получение значения метрики Psi statistic для таблицы x на основании таблицы x_true
-
     Parameters
     ----------
     x_true: np.ndarray
         векторизованная базовая матрица
     x: np.ndarray
         векторизованная матрица для сравнения ограничений
-
     Returns
     -------
     a: float
@@ -178,9 +167,9 @@ def PsiStat(x, x_true):
     try:
         # Проверяем число измерений
         if x.ndim == 1 or x.shape[1] == 1:
-            x = v.tomatrix(x)
+            x = v.tomatrix(x, shape)
         if x_true.ndim == 1 or x_true.shape[1] == 1:
-            x_true = v.tomatrix(x_true)    
+            x_true = v.tomatrix(x_true, shape)    
         
         s = (x_true + x) / 2
 
@@ -203,17 +192,15 @@ def PsiStat(x, x_true):
         logging.error(traceback.format_exc())
         return -1
     
-def RSQ(x, x_true):
+def RSQ(x, x_true, shape = None):
     """
     Получение значения метрики RSQ(коэффициент детерминации) для таблицы x на основании таблицы x_true
-
     Parameters
     ----------
     x_true: np.ndarray
         векторизованная базовая матрица
     x: np.ndarray
         векторизованная матрица для сравнения ограничений
-
     Returns
     -------
     a: float
@@ -222,9 +209,9 @@ def RSQ(x, x_true):
     try:
         # Проверяем число измерений
         if x.ndim == 1 or x.shape[1] == 1:
-            x = v.tomatrix(x)
+            x = v.tomatrix(x, shape)
         if x_true.ndim == 1 or x_true.shape[1] == 1:
-            x_true = v.tomatrix(x_true)   
+            x_true = v.tomatrix(x_true, shape)   
         
         var = x_true - np.mean(np.mean(x_true))
         TSS = np.sum(np.sum(var * var))
@@ -236,4 +223,3 @@ def RSQ(x, x_true):
     except Exception as e:
         logging.error(traceback.format_exc())
         return -1
-    

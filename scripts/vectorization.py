@@ -7,7 +7,6 @@ import scipy.sparse as sps
 def addG(indexes, size, G = None):
     """
     Добавение нового линейного ограничения к матрице G
-
     Parameters
     ----------
     G: np.ndarray
@@ -16,7 +15,6 @@ def addG(indexes, size, G = None):
         вектор индексов, участвующих в новом ограничении
     size: tuple
         размерность исходной таблицы
-
     Returns
     -------
     G: np.ndarray
@@ -37,14 +35,12 @@ def addG(indexes, size, G = None):
 def addrows(shape, G = None, sparsed = False):
     """
     Добавение линейных ограничений для сумм всех строк к матрице G
-
     Parameters
     ----------
     G: np.ndarray
         матрица линейных ограничений
     shape: tuple
         размерность исходной таблицы
-
     Returns
     -------
     G: np.ndarray
@@ -72,14 +68,12 @@ def addrows(shape, G = None, sparsed = False):
 def addcolumns(shape, G = None, sparsed = False):
     """
     Добавение линейных ограничений для сумм всех столбцов к матрице G
-
     Parameters
     ----------
     G: np.ndarray
         матрица линейных ограничений
     shape: tuple
         размерность исходной таблицы
-
     Returns
     -------
     G: np.ndarray
@@ -109,12 +103,10 @@ def addcolumns(shape, G = None, sparsed = False):
 def tovector(a):
     """
     Векторизация матрицы а
-
     Parameters
     ----------
     a: np.ndarray
         исходная матрица
-
     Returns
     -------
     a: np.ndarray
@@ -130,14 +122,12 @@ def tovector(a):
 def tomatrix(a, shape = None):
     """
     Перевод вектора а в матричную форму размерности shape
-
     Parameters
     ----------
     a: np.ndarray
         исходный вектор
     shape: tuple
         размерность матрицы, если не задана, то предполагается, что матрица квадратная
-
     Returns
     -------
     a: np.ndarray
